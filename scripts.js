@@ -245,8 +245,6 @@ if (contactForm) {
   );
 
   contactForm.addEventListener('submit', (event) => {
-    // event.preventDefault();
-
     const isValid = handleFormSubmit(
       contactForm,
       contactSuccess,
@@ -255,10 +253,11 @@ if (contactForm) {
     );
 
     if (!isValid) {
-  event.preventDefault();
-  return;
-
-
+      event.preventDefault();
+      return;
+    }
+  });
+}
     setTimeout(() => {
       contactForm.reset();
     }, 950);
@@ -273,8 +272,6 @@ if (applyForm) {
   );
 
   applyForm.addEventListener('submit', (event) => {
-    // event.preventDefault();
-
     const isValid = handleFormSubmit(
       applyForm,
       applySuccess,
@@ -283,16 +280,13 @@ if (applyForm) {
     );
 
     if (!isValid) {
-  event.preventDefault();
-  return;
+      event.preventDefault();
+      return;
+    }
+  });
+}
 
-    const data = Object.fromEntries(new FormData(applyForm));
-    submissions.push(data);
-    console.log('Apply submissions', submissions);
-
-    setTimeout(() => {
-      applyForm.reset();
-    }, 950);
+    
   });
 }
 
