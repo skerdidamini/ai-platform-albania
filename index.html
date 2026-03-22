@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Platform Albania</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero" id="home">
+      <nav class="nav" aria-label="Primary">
+        <div class="brand">
+          <span class="logo-mark">AI</span>
+          Platform Albania
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-menu">
+          <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#how-it-works">How it Works</a>
+            <a href="#modules">Modules</a>
+            <a href="#faq">FAQ</a>
+            <a href="#updates">Updates</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <div class="nav-actions">
+            <button class="ghost-btn" type="button" data-menu-link data-target="#apply">
+              Join Waitlist
+            </button>
+            <button class="primary-btn" type="button" data-menu-link data-target="#pilot">
+              Pilot Access
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="nav-backdrop" data-nav-close></div>
+      <div class="hero-content">
+        <div>
+          <p class="eyebrow">MVP in development * Pilot applications open</p>
+          <h1>Practical AI learning for Albania</h1>
+          <p class="lead">
+            AI Platform Albania helps youth, SMEs, and educational institutions understand, learn, and apply AI through
+            readiness assessment, guided learning paths, and practical tools.
+          </p>
+          <div class="hero-ctas">
+            <button class="primary-btn" type="button" onclick="document.getElementById('apply').scrollIntoView({ behavior: 'smooth' })">
+              Join Waitlist
+            </button>
+            <button class="ghost-btn" type="button" onclick="document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' })">
+              How it Works
+            </button>
+          </div>
+          <div class="hero-values">
+            <div>
+              <strong>Target groups:</strong>
+              <span>Youth, SMEs, Schools & VET</span>
+            </div>
+            <div>
+              <strong>Focus:</strong>
+              <span>Readiness, learning paths, toolkits</span>
+            </div>
+          </div>
+          <p class="hero-support">
+            Built for early users, pilot partners, and organizations ready to explore practical AI adoption.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <p>Intuitive modules * readiness scan * certifications</p>
+          <div class="hero-panel-card">
+            <p>Pilot applications open</p>
+            <p class="hero-panel-value">Q2 2026</p>
+          </div>
+          <div class="hero-panel-card">
+            <p>Built for youth, SMEs, and educational institutions across Albania.</p>
+          </div>
+          <div class="hero-trust">
+            <span>MVP in development</span>
+            <span>Pilot applications open</span>
+            <span>Built for Albanian youth, SMEs, & VET</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="features" class="section">
+        <h2>Key Features</h2>
+        <p class="section-intro">Everything you need to go from readiness to real AI use.</p>
+        <div class="feature-grid" id="feature-grid"></div>
+      </section>
+
+      <section class="section why-section" id="why">
+        <h2>Why AI Platform Albania</h2>
+        <p class="section-intro">Built to make AI more practical, accessible, and relevant for real users in Albania.</p>
+        <div class="why-grid">
+          <article>
+            <h3>Localized for Albania</h3>
+            <p>Designed with the needs of Albanian users, businesses, and institutions in mind.</p>
+          </article>
+          <article>
+            <h3>Practical, not theoretical</h3>
+            <p>Focused on real use cases, simple tools, and direct application instead of abstract concepts.</p>
+          </article>
+          <article>
+            <h3>Built around structure</h3>
+            <p>Combines assessment, learning paths, and toolkits into one clear user journey.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Value Propositions</h2>
+        <div class="node-grid">
+          <article>
+            <h3>AI Readiness Scan</h3>
+            <p>Understand your current level and identify the right starting point for your AI journey.</p>
+          </article>
+          <article>
+            <h3>Personalized Learning Paths</h3>
+            <p>Access structured learning paths designed for different user profiles and real use cases.</p>
+          </article>
+          <article>
+            <h3>Practical Toolkits</h3>
+            <p>Use templates, prompts, guides, and resources that help turn knowledge into action.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="target" class="section">
+        <h2>Who is it for?</h2>
+        <p class="section-intro">
+          AI Platform Albania is designed for users who want practical, structured, and accessible ways to apply AI in
+          learning, work, and daily operations.
+        </p>
+        <div class="target-grid">
+          <article>
+            <h3>Youth</h3>
+            <p>Students, graduates, and young professionals looking to build practical AI skills for work, freelancing, and productivity.</p>
+          </article>
+          <article>
+            <h3>SMEs</h3>
+            <p>Small businesses that want to save time, improve workflows, and adopt AI in a simple and useful way.</p>
+          </article>
+          <article>
+            <h3>Schools & VET</h3>
+            <p>Educational institutions and training centers looking for modern, structured AI learning support.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div>
+          <h2>About the Platform</h2>
+          <p class="section-intro">
+            AI Platform Albania is being built to address a growing gap in the Albanian market: strong interest in artificial intelligence, but limited access to practical, structured, and locally relevant learning solutions.
+          </p>
+          <p>
+            The platform is designed to help users move beyond curiosity and into real use. Instead of offering only general information, it combines readiness assessment, guided learning paths, practical resources, and progress tracking in one place.
+          </p>
+          <p>
+            Our goal is to make AI easier to understand, easier to apply, and more useful for youth, SMEs, and education-focused users across Albania.
+          </p>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="section">
+        <h2>How it Works</h2>
+        <p class="section-intro">A simple journey from first contact to practical AI use.</p>
+        <div class="flow-grid" id="flow-grid"></div>
+      </section>
+
+      <section id="modules" class="section">
+        <h2>Learning Paths</h2>
+        <p class="section-intro">The first modules are designed to support different user profiles and practical goals.</p>
+        <div class="module-grid" id="module-grid"></div>
+      </section>
+
+      <section id="demo" class="section">
+        <h2>Platform Preview</h2>
+        <p class="section-intro">A first look at the structure of the product we are building.</p>
+        <div class="demo-grid" id="demo-grid"></div>
+      </section>
+
+      <section id="pilot" class="section pilot">
+        <div>
+          <h2>Join the Early Access Phase</h2>
+          <p>
+            We are currently preparing the first MVP version of AI Platform Albania and opening the door to early users, pilot participants, and potential institutional or SME partners.
+          </p>
+          <p>
+            Whether you are an individual learner, a business, or an educational organization, you can register your interest and be part of the first testing phase.
+          </p>
+        </div>
+        <div class="pilot-card">
+          <button class="primary-btn" type="button" data-menu-link data-target="#apply">Apply for Pilot Access</button>
+          <button class="ghost-btn" type="button" data-menu-link data-target="#contact">Contact Us</button>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact-form-section">
+        <div>
+          <h2>Get in Touch</h2>
+          <p>
+            Have a question, partnership idea, or want to learn more about the platform? We*d love to hear from you.
+          </p>
+          <div class="contact-info">
+            <p>Email us at: hello@aiplatformalbania.com</p>
+            <p> Not available yet</p>
+            <div class="social-links">
+              <a href="javascript:void(0)">LinkedIn</a>
+<a href="javascript:void(0)">Twitter</a>
+<a href="javascript:void(0)">YouTube</a>
+            </div>
+          </div>
+        </div>
+        <form id="contact-form" class="form-grid">
+          <label>
+            Full Name
+            <input type="text" name="name" required />
+          </label>
+          <label>
+            Email Address
+            <input type="email" name="email" required />
+          </label>
+          <label>
+            Organization
+            <input type="text" name="organization" />
+          </label>
+          <label>
+            Role Type
+            <input type="text" name="role" />
+          </label>
+          <label>
+            Category
+            <select name="category" required>
+              <option value="">Select category</option>
+              <option>Individual Learner</option>
+              <option>SME</option>
+              <option>School / Institution</option>
+              <option>Partner / Collaborator</option>
+            </select>
+          </label>
+          <label class="full">
+            Message
+            <textarea name="message" rows="4" required></textarea>
+          </label>
+          <button class="primary-btn" type="submit">Send Message</button>
+          <p id="contact-success" class="form-success" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="apply" class="section apply-form-section">
+        <div>
+          <h2>Join the Waitlist</h2>
+          <p class="section-intro">Register your interest to get updates, early access opportunities, and pilot participation information.</p>
+        </div>
+        <form id="apply-form" class="form-grid compact">
+          <label>
+            Full Name
+            <input type="text" name="fullName" required />
+          </label>
+          <label>
+            Email Address
+            <input type="email" name="email" required />
+          </label>
+          <label>
+            Phone Number (Optional)
+            <input type="tel" name="phone" />
+          </label>
+          <label>
+            City
+            <input type="text" name="city" required />
+          </label>
+          <label>
+            Role
+            <input type="text" name="role" required />
+          </label>
+          <label>
+            Applicant Type
+            <select name="applicantType" required>
+              <option value="">Select type</option>
+              <option>Individual</option>
+              <option>SME</option>
+              <option>Institution</option>
+            </select>
+          </label>
+          <label>
+            Module of Interest
+            <select name="module" required>
+              <option value="">Select module</option>
+              <option>AI Readiness &amp; Foundations</option>
+              <option>AI for Youth, Work &amp; Freelancing</option>
+              <option>AI for SMEs, Tourism &amp; Small Business</option>
+              <option>AI for Schools &amp; VET</option>
+            </select>
+          </label>
+          <label class="full">
+            What would you like to use AI for?
+            <textarea name="intent" rows="3" required></textarea>
+          </label>
+          <label>
+            <input type="checkbox" name="pilot" />
+            Interested in pilot access?
+          </label>
+          <label>
+            <input type="checkbox" name="consent" required />
+            I agree to be contacted about platform updates and pilot opportunities.
+          </label>
+          <button class="primary-btn" type="submit">Join Waitlist</button>
+          <p id="apply-success" class="form-success" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="faq" class="section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-accordion" id="faq-accordion"></div>
+      </section>
+
+      <section id="updates" class="section updates">
+        <h2>Latest Updates</h2>
+        <p class="section-intro">Follow the latest platform news, AI learning insights, and practical use cases.</p>
+        <div class="updates-meta">
+          <div class="updates-categories">
+            <span>Platform Updates</span>
+            <span>AI Skills</span>
+            <span>SME Use Cases</span>
+            <span>Youth &amp; Education</span>
+          </div>
+          <div class="newsletter-cta">
+            <p>Newsletter</p>
+            <button class="ghost-btn" type="button">Coming soon</button>
+          </div>
+        </div>
+        <div class="blog-grid" id="blog-grid"></div>
+        <button class="ghost-btn" type="button">View All Updates</button>
+        <div class="empty-state" id="blog-empty" hidden>
+          <p>No posts yet*check back soon for pilot stories.</p>
+        </div>
+      </section>
+
+      <section class="section final-cta">
+        <div>
+          <h2>Ready to explore practical AI learning in Albania?</h2>
+          <p>Join the waitlist and be among the first to discover the platform, pilot opportunities, and early learning paths.</p>
+        </div>
+        <div class="cta-actions">
+          <button class="primary-btn" type="button" data-menu-link data-target="#apply">Join Waitlist</button>
+          <button class="ghost-btn" type="button" data-menu-link data-target="#contact">Contact Us</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <div class="brand">
+          <span class="logo-mark">AI</span>
+          Platform Albania
+        </div>
+        <p>AI Platform Albania is a practical AI readiness and learning platform designed for youth, SMEs, and educational users in Albania.</p>
+      </div>
+      <div class="footer-columns">
+        <div>
+          <h4>Quick links</h4>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#how-it-works">How it Works</a>
+          <a href="#modules">Modules</a>
+          <a href="#faq">FAQ</a>
+          <a href="#updates">Updates</a>
+          <a href="#contact">Contact</a>
+          <a href="#apply">Join Waitlist</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>Email us at: hello@aiplatformalbania.com</p>
+          <p>Not avaible yet</p>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Use</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>* 2026 AI Platform Albania. All rights reserved.</span>
+        <div class="social-links">
+          <a href="#">linkedin.com
+          <a href="#">Twitter.com</a>
+          <a href="#">YouTube.com</a>
+        </div>
+      </div>
+    </footer>
+    <script src="scripts.js"></script>
+  </body>
+</html>
