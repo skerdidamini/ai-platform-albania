@@ -261,8 +261,6 @@ if (contactForm) {
     setTimeout(() => {
       contactForm.reset();
     }, 950);
-  });
-}
 
 if (applyForm) {
   attachFieldMessages(applyForm);
