@@ -258,9 +258,7 @@ if (contactForm) {
     }
   });
 }
-    setTimeout(() => {
-      contactForm.reset();
-    }, 950);
+    
 
 if (applyForm) {
   attachFieldMessages(applyForm);
@@ -284,9 +282,6 @@ if (applyForm) {
   });
 }
 
-    
-  });
-}
 
 const closeMenu = () => {
   document.body.classList.remove('nav-open');
