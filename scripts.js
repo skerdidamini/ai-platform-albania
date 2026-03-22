@@ -245,7 +245,7 @@ if (contactForm) {
   );
 
   contactForm.addEventListener('submit', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     const isValid = handleFormSubmit(
       contactForm,
@@ -254,7 +254,10 @@ if (contactForm) {
       'Please check the highlighted fields and try again.'
     );
 
-    if (!isValid) return;
+    if (!isValid) {
+  event.preventDefault();
+  return;
+
 
     setTimeout(() => {
       contactForm.reset();
@@ -270,7 +273,7 @@ if (applyForm) {
   );
 
   applyForm.addEventListener('submit', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     const isValid = handleFormSubmit(
       applyForm,
@@ -279,7 +282,9 @@ if (applyForm) {
       'Please complete all required fields before submitting.'
     );
 
-    if (!isValid) return;
+    if (!isValid) {
+  event.preventDefault();
+  return;
 
     const data = Object.fromEntries(new FormData(applyForm));
     submissions.push(data);
