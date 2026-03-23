@@ -54,15 +54,6 @@ const updateAdminButton = () => {
 
 let currentUser = null;
 
-const normalizeEmail = (email) => email.split('@')[0].replace(/[^a-z]/gi, '').toUpperCase() || 'Pilot learner';
-
-const createUserRecord = ({ name, email, role }) => ({
-  name,
-  email,
-  role,
-  isAdmin: /admin/i.test(email || '')
-});
-
 const scanQuestions = [
   { block: 'Familiarity', text: 'How familiar are you with basic AI terminology?' },
   { block: 'Familiarity', text: 'How often do you hear about AI solutions in your field?' },
