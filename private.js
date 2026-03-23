@@ -574,6 +574,15 @@ const renderStepContent = (step) => {
         <article class="completion-card module-step-card">
           <h3>Module Completed</h3>
           <p>You completed Module 1: AI Readiness & Foundations.</p>
+          <section class="result-summary">
+            <h4>Your current result</h4>
+            <ul>
+              <li><strong>AI Readiness Level:</strong> ${readinessLabel}</li>
+              <li><strong>Quiz Score:</strong> ${score}/6 (${passed ? 'Passed' : 'Try again'})</li>
+              <li><strong>Module Status:</strong> Completed</li>
+              <li><strong>Module Progress:</strong> 1 of 1 live module completed</li>
+            </ul>
+          </section>
           <p>You now have:</p>
           <ul>
             <li>a clearer understanding of what AI is</li>
