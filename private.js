@@ -153,7 +153,8 @@ const moduleSteps = [
     description: 'Understand what AI means for everyday work.',
     type: 'lesson',
     content:
-      'AI is any tool that learns from patterns and helps make better decisions. It is already inside basic search, maps, or reminder features.'
+      'AI is any tool that learns from patterns and helps make better decisions. It is already inside basic search, maps, or reminder features.',
+    takeaway: 'AI is already helping you every day—start noticing the tools you already use.'
   },
   {
     id: 'lesson2',
@@ -161,7 +162,8 @@ const moduleSteps = [
     description: 'Find practical moments to introduce AI.',
     type: 'lesson',
     content:
-      'AI shows up when you automate emails, summarize reports, or create visuals quickly. Spot the steps in your work that feel repetitive.'
+      'AI shows up when you automate emails, summarize reports, or create visuals quickly. Spot the steps in your work that feel repetitive.',
+    takeaway: 'Look for repetitive or manual tasks—those are the best places to test AI helpers.'
   },
   {
     id: 'lesson3',
@@ -169,7 +171,8 @@ const moduleSteps = [
     description: 'Learn how to partner with AI safely.',
     type: 'lesson',
     content:
-      'Be clear about what you share and always double-check the output. Treat AI suggestions as helpers, not final answers.'
+      'Be clear about what you share and always double-check the output. Treat AI suggestions as helpers, not final answers.',
+    takeaway: 'Protect sensitive information, and always review AI ideas before acting.'
   },
   {
     id: 'lesson4',
@@ -177,7 +180,8 @@ const moduleSteps = [
     description: 'Try new prompts and toolkits.',
     type: 'lesson',
     content:
-      'Start with short prompts for scheduling, note-taking, or idea shaping. Keep each exercise under 10 minutes to stay focused.'
+      'Start with short prompts for scheduling, note-taking, or idea shaping. Keep each exercise under 10 minutes to stay focused.',
+    takeaway: 'Small, focused prompts can unlock quick wins before diving deeper.'
   },
   {
     id: 'quiz',
@@ -202,6 +206,16 @@ const moduleFlowState = {
   quizScore: null,
   quizPassed: false,
   completed: false
+};
+
+const lessonOneIndex = moduleSteps.findIndex((step) => step.id === 'lesson1');
+const quizStepIndex = moduleSteps.findIndex((step) => step.id === 'quiz');
+const completionIndex = moduleSteps.findIndex((step) => step.type === 'completion');
+let lastRenderedStepId = null;
+
+const goToLessonOne = () => {
+  moduleFlowState.stepIndex = lessonOneIndex;
+  renderModuleFlow();
 };
 
 const STORAGE_KEY = 'ai-platform-albania-private';
@@ -312,22 +326,27 @@ const renderDashboard = () => {
       : 'Not taken yet';
 
   appContent.innerHTML = `
-    <h2>Welcome, ${userName.split(' ')[0] || userName}</h2>
-    <p class="module-description">
-      This is your pilot learning space. Start with Module 1 and complete your AI readiness journey.
-    </p>
-    <div class="card-grid">
+    <section class="dashboard-welcome">
+      <h2>Welcome back, ${userName.split(' ')[0] || userName}</h2>
+      <p class="module-description">
+        This is your pilot learning space. Start with Module 1 and build your AI readiness step by step.
+      </p>
+      <p class="pilot-note">
+        Only Module 1 is live in this pilot phase. More modules will be added later.
+      </p>
+      <button id="dashboardCTA" class="primary-btn dashboard-cta" type="button">${ctaText}</button>
+    </section>
+    <div class="card-grid dashboard-cards">
       <article class="info-card">
         <h3>Module 1 status</h3>
         <p>${statusLabel}</p>
-        <button id="dashboardCTA" class="primary-btn" type="button">${ctaText}</button>
       </article>
       <article class="info-card">
         <h3>Quiz score</h3>
         <p>${quizSummary}</p>
       </article>
       <article class="info-card">
-        <h3>Readiness snapshot</h3>
+        <h3>Readiness level</h3>
         <p>${readinessLabel}</p>
         <p>${readinessScoreText}</p>
         <p>${readinessTip}</p>
@@ -370,110 +389,140 @@ const renderProfile = () => {
 const renderStepContent = (step) => {
   switch (step.type) {
     case 'content':
-      return `<p class="module-copy">${step.content}</p>`;
-    case 'scan': {
       return `
-        <div class="module-scan-grid">
-          ${scanQuestions
+        <article class="module-step-card">
+          <p class="module-step-intro">${step.content}</p>
+        </article>
+      `;
+    case 'scan': {
+      const blocks = scanQuestions.reduce((acc, question, index) => {
+        acc[question.block] = acc[question.block] || [];
+        acc[question.block].push({ ...question, index });
+        return acc;
+      }, {});
+      return `
+        <article class="module-step-card scan-card">
+          <p class="module-step-intro">
+            Answer these short questions to understand your current AI readiness level.
+          </p>
+          <p class="scan-helper">There are no right or wrong answers. 1 = Not at all · 5 = Very much.</p>
+          ${Object.entries(blocks)
             .map(
-              (question, index) => `
-                <article class="scan-card">
-                  <small class="scan-block">${question.block}</small>
-                  <p>${question.text}</p>
-                  <div class="scale-input">
-                    <input
-                      class="scan-range"
-                      type="range"
-                      min="1"
-                      max="5"
-                      value="${moduleFlowState.scanResponses[index]}"
-                      data-index="${index}"
-                    />
-                    <span class="scale-value" id="scanValue-${index}">${moduleFlowState.scanResponses[index]}</span>
+              ([blockName, questions]) => `
+                <div class="scan-block-section">
+                  <h3>${blockName}</h3>
+                  <div class="module-scan-grid">
+                    ${questions
+                      .map(
+                        (question) => `
+                          <article class="scan-card">
+                            <p class="scan-question">${question.text}</p>
+                            <div class="scale-input">
+                              <input
+                                class="scan-range"
+                                type="range"
+                                min="1"
+                                max="5"
+                                value="${moduleFlowState.scanResponses[question.index]}"
+                                data-index="${question.index}"
+                              />
+                              <span class="scale-value" id="scanValue-${question.index}">
+                                ${moduleFlowState.scanResponses[question.index]}
+                              </span>
+                            </div>
+                            <div class="scale-labels">
+                              <span>1 – Not at all</span>
+                              <span>5 – Very much</span>
+                            </div>
+                          </article>
+                        `
+                      )
+                      .join('')}
                   </div>
-                  <div class="scale-labels">
-                    <span>1</span>
-                    <span>5</span>
-                  </div>
-                </article>
+                </div>
               `
             )
             .join('')}
-        </div>
+        </article>
       `;
     }
     case 'result': {
       const score = moduleFlowState.scanScore ?? calculateScanScore();
       const level = moduleFlowState.scanLevel ?? evaluateScanLevel(score);
       return `
-        <article class="result-card">
-          <div class="result-row">
-            <span>Score</span>
-            <strong>${score}/60</strong>
-          </div>
-          <div class="result-row">
-            <span>Level</span>
-            <strong>${level.label}</strong>
-          </div>
+        <article class="result-card module-step-card">
+          <h3>Your AI Readiness Result</h3>
+          <p class="result-score">Score: ${score}/60</p>
+          <p class="result-level">Level: ${level.label}</p>
           <p>${level.description}</p>
-          <p class="direction">Recommended direction: ${level.direction}</p>
+          <p class="direction">Recommended next step: ${level.direction}</p>
+          <button class="primary-btn" id="resultCTA" type="button">Continue to Lesson 1</button>
         </article>
       `;
     }
     case 'lesson':
       return `
-        <article class="lesson-card">
+        <article class="lesson-card module-step-card">
+          <h3>${step.title}</h3>
           <p>${step.content}</p>
+          <div class="key-takeaway">
+            <span>Key takeaway</span>
+            <p>${step.takeaway}</p>
+          </div>
         </article>
       `;
-    case 'quiz': {
+    case 'quiz':
       return `
-        <div class="quiz-grid">
-          ${moduleQuizQuestions
-            .map(
-              (question, index) => `
-                <article class="quiz-card">
-                  <h3>Question ${index + 1}</h3>
-                  <p>${question.question}</p>
-                  <div class="quiz-options">
-                    ${question.options
-                      .map(
-                        (option) => `
-                          <label>
-                            <input
-                              type="radio"
-                              name="quiz-${index}"
-                              value="${option}"
-                              data-question="${index}"
-                              ${moduleFlowState.quizAnswers[index] === option ? 'checked' : ''}
-                            />
-                            ${option}
-                          </label>
-                        `
-                      )
-                      .join('')}
-                  </div>
-                </article>
-              `
-            )
-            .join('')}
-        </div>
-        <p id="quizFeedback" class="form-status" aria-live="polite"></p>
+        <article class="quiz-card module-step-card">
+          <p class="module-step-intro">Answer the quiz to confirm what you learned.</p>
+          <div class="quiz-grid">
+            ${moduleQuizQuestions
+              .map(
+                (question, index) => `
+                  <article class="quiz-question-card">
+                    <h3>Question ${index + 1}</h3>
+                    <p>${question.question}</p>
+                    <div class="quiz-options">
+                      ${question.options
+                        .map(
+                          (option) => `
+                            <label>
+                              <input
+                                type="radio"
+                                name="quiz-${index}"
+                                value="${option}"
+                                data-question="${index}"
+                                ${moduleFlowState.quizAnswers[index] === option ? 'checked' : ''}
+                              />
+                              ${option}
+                            </label>
+                          `
+                        )
+                        .join('')}
+                    </div>
+                  </article>
+                `
+              )
+              .join('')}
+          </div>
+          <p id="quizFeedback" class="quiz-feedback" aria-live="polite"></p>
+        </article>
       `;
-    }
     case 'completion': {
       const score = moduleFlowState.quizScore ?? 0;
       const passed = moduleFlowState.quizPassed;
+      const readinessLabel = moduleFlowState.scanLevel?.label || 'Not assessed yet';
       return `
-        <article class="completion-card">
-          <h3>Completion screen</h3>
-          <p>You finished Module 1 · AI Readiness & Foundations.</p>
-          <p>Quiz score: ${score}/6 (${passed ? 'Passed' : 'Pending review'})</p>
+        <article class="completion-card module-step-card">
+          <h3>You completed Module 1: AI Readiness & Foundations.</h3>
+          <p>You now have a clearer starting point for using AI practically.</p>
+          <p><strong>Current readiness level:</strong> ${readinessLabel}</p>
+          <p><strong>Quiz result:</strong> ${score}/6 (${passed ? 'Passed' : 'Try again'})</p>
           <div class="certificate-card">
-            <p>Certificate available</p>
-            <small>Coming soon inside the pilot workspace.</small>
+            <p>Certificate available in the pilot version.</p>
           </div>
-          <p class="module-complete-note">Module marked as completed.</p>
+          <p>More modules will be unlocked in future phases.</p>
+          <button class="primary-btn" id="completionDashboard" type="button">Return to Dashboard</button>
         </article>
       `;
     }
@@ -484,6 +533,10 @@ const renderStepContent = (step) => {
 
 const renderModuleFlow = () => {
   const step = moduleSteps[moduleFlowState.stepIndex];
+  if (step.id === 'quiz' && lastRenderedStepId !== 'quiz') {
+    moduleFlowState.quizScore = null;
+    moduleFlowState.quizPassed = false;
+  }
   const progressPercent = Math.round(((moduleFlowState.stepIndex + 1) / moduleSteps.length) * 100);
   moduleFlowState.completed = moduleFlowState.stepIndex === moduleSteps.length - 1;
   appContent.innerHTML = `
@@ -511,28 +564,43 @@ const renderModuleFlow = () => {
   `;
   setupModuleInteractivity(step);
   persistState();
+  lastRenderedStepId = step.id;
 };
 
 const handleModuleNext = () => {
   const step = moduleSteps[moduleFlowState.stepIndex];
   if (step.type === 'quiz') {
     const quizFeedback = document.getElementById('quizFeedback');
-    const allAnswered = moduleQuizQuestions.every((_, index) => !!moduleFlowState.quizAnswers[index]);
-    if (!allAnswered) {
-      if (quizFeedback) quizFeedback.textContent = 'Please answer every question before continuing.';
+    if (moduleFlowState.quizScore === null) {
+      const allAnswered = moduleQuizQuestions.every((_, index) => !!moduleFlowState.quizAnswers[index]);
+      if (!allAnswered) {
+        if (quizFeedback) quizFeedback.textContent = 'Please answer every question before continuing.';
+        return;
+      }
+      const score = moduleQuizQuestions.reduce(
+        (total, question, index) =>
+          total + (moduleFlowState.quizAnswers[index] === question.answer ? 1 : 0),
+        0
+      );
+      moduleFlowState.quizScore = score;
+      moduleFlowState.quizPassed = score >= 4;
+      if (quizFeedback) {
+        const message = moduleFlowState.quizPassed
+          ? 'Great job! You passed the quiz.'
+          : 'You can review the lessons and try again.';
+        quizFeedback.textContent = `You scored ${score}/6. ${message}`;
+        quizFeedback.classList.add('success');
+      }
+      renderModuleFlow();
       return;
     }
-    const score = moduleQuizQuestions.reduce(
-      (total, question, index) =>
-        total + (moduleFlowState.quizAnswers[index] === question.answer ? 1 : 0),
-      0
-    );
-    moduleFlowState.quizScore = score;
-    moduleFlowState.quizPassed = score >= 4;
-    if (quizFeedback) {
-      quizFeedback.textContent = `You scored ${score}/6.`;
-      quizFeedback.classList.add('success');
+    if (moduleFlowState.quizPassed) {
+      moduleFlowState.stepIndex = completionIndex;
+    } else {
+      moduleFlowState.stepIndex = lessonOneIndex;
     }
+    renderModuleFlow();
+    return;
   }
 
   if (step.type === 'scan') {
@@ -564,8 +632,18 @@ const setupModuleInteractivity = (step) => {
 
   if (nextButton) {
     const isCompletion = moduleFlowState.stepIndex === moduleSteps.length - 1;
-    nextButton.hidden = isCompletion;
-    if (!isCompletion) {
+    nextButton.hidden = isCompletion || step.type === 'result';
+    if (step.type === 'quiz') {
+      nextButton.textContent =
+        moduleFlowState.quizScore === null
+          ? 'Submit quiz'
+          : moduleFlowState.quizPassed
+          ? 'Complete Module'
+          : 'Review Lessons';
+    } else {
+      nextButton.textContent = 'Next';
+    }
+    if (!nextButton.hidden) {
       nextButton.addEventListener('click', handleModuleNext);
     }
   }
@@ -602,6 +680,14 @@ const setupModuleInteractivity = (step) => {
         persistState();
       });
     });
+  }
+  const resultCTA = document.getElementById('resultCTA');
+  if (resultCTA) {
+    resultCTA.addEventListener('click', goToLessonOne);
+  }
+  const completionButton = document.getElementById('completionDashboard');
+  if (completionButton) {
+    completionButton.addEventListener('click', () => handleRoute('dashboard'));
   }
 };
 
