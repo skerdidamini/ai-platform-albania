@@ -213,6 +213,223 @@ body {
   gap: 1.25rem;
 }
 
+.module-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.module-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.module-description {
+  margin: 0;
+  color: var(--muted);
+}
+
+.module-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--orange));
+}
+
+.module-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.module-copy {
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.module-scan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.scan-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.scan-block {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aab3d4;
+}
+
+.scale-input {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.scan-range {
+  width: 100%;
+}
+
+.scale-value {
+  font-weight: 600;
+  min-width: 1.2rem;
+  text-align: right;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.result-card,
+.lesson-card,
+.quiz-card,
+.completion-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.direction {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.lesson-card {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+
+.quiz-options label {
+  font-size: 0.85rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.module-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.module-nav-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.completion-card {
+  text-align: left;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  text-align: left;
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.admin-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.certificate-card {
+  margin: 1rem 0;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  padding: 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.module-complete-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.form-status.success {
+  color: #5cff8a;
+}
+
+.form-status.error {
+  color: #ff7a7a;
+}
+
+.certificate-card small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+}
+
 .app-content h2 {
   margin: 0;
   font-size: 1.4rem;
