@@ -52,6 +52,13 @@ const updateAdminButton = () => {
   if (adminButton) adminButton.hidden = !currentUser?.isAdmin;
 };
 
+const setActiveNav = (route) => {
+  routeButtons.forEach((button) => {
+    const isLogout = button.dataset.route === 'logout';
+    button.classList.toggle('active', !isLogout && button.dataset.route === route);
+  });
+};
+
 let currentUser = null;
 
 const scanQuestions = [
