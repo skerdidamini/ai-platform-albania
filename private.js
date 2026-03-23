@@ -55,18 +55,18 @@ const updateAdminButton = () => {
 let currentUser = null;
 
 const scanQuestions = [
-  { block: 'Familiarity', text: 'How familiar are you with basic AI terminology?' },
-  { block: 'Familiarity', text: 'How often do you hear about AI solutions in your field?' },
-  { block: 'Familiarity', text: 'How comfortable are you explaining what AI can do?' },
-  { block: 'Current behavior', text: 'How often do you use AI tools in your daily tasks?' },
-  { block: 'Current behavior', text: 'Do you rely on templates or automations that feel like AI?' },
-  { block: 'Current behavior', text: 'How confident are you describing your current workflow to identify gaps?' },
-  { block: 'Goals', text: 'How important is learning AI for your current goals?' },
-  { block: 'Goals', text: 'How motivated are you to try new AI tools soon?' },
-  { block: 'Goals', text: 'How clear are you on the outcomes you want from AI?' },
-  { block: 'Readiness', text: 'How ready are you to spend dedicated time on learning AI?' },
-  { block: 'Readiness', text: 'How confident are you to apply AI suggestions after training?' },
-  { block: 'Readiness', text: 'How supported do you feel to experiment with AI in your context?' }
+  { block: 'Familiarity', text: 'How familiar are you with the idea of artificial intelligence?' },
+  { block: 'Familiarity', text: 'How confident do you feel when people talk about AI tools?' },
+  { block: 'Familiarity', text: 'How well do you understand what AI can and cannot do?' },
+  { block: 'Current behavior', text: 'How often do you currently use AI tools in your work, study, or daily tasks?' },
+  { block: 'Current behavior', text: 'How comfortable are you trying a new AI tool on your own?' },
+  { block: 'Current behavior', text: 'How often do you use digital tools to save time or improve your work?' },
+  { block: 'Goals', text: 'How interested are you in using AI more practically?' },
+  { block: 'Goals', text: 'How useful do you think AI could be for your personal or professional goals?' },
+  { block: 'Goals', text: 'How motivated are you to improve your AI skills in the next few months?' },
+  { block: 'Readiness', text: 'How ready are you to start learning AI step by step?' },
+  { block: 'Readiness', text: 'How open are you to changing the way you work or study with the help of AI?' },
+  { block: 'Readiness', text: 'How likely are you to apply what you learn after this module?' }
 ];
 
 const moduleQuizQuestions = [
@@ -126,6 +126,10 @@ const moduleQuizQuestions = [
   }
 ];
 
+const QUIZ_PASS_MESSAGE =
+  'Well done.\n\nYou completed the quiz successfully and finished the learning part of Module 1.';
+const QUIZ_FAIL_MESSAGE = 'Almost there.\n\nReview the lessons and try again. The goal is understanding, not perfection.';
+
 const moduleSteps = [
   {
     id: 'welcome',
@@ -138,7 +142,8 @@ const moduleSteps = [
   {
     id: 'scan',
     title: 'AI Readiness Scan',
-    description: 'Answer 12 quick questions to map your starting level.',
+    description:
+      'Before you begin, take this short scan to understand your current starting point with AI. There are no right or wrong answers. This is simply a quick way to see where you are today and what kind of learning path may suit you best.',
     type: 'scan'
   },
   {
@@ -152,36 +157,76 @@ const moduleSteps = [
     title: 'Lesson 1 – What AI is',
     description: 'Understand what AI means for everyday work.',
     type: 'lesson',
-    content:
-      'AI is any tool that learns from patterns and helps make better decisions. It is already inside basic search, maps, or reminder features.',
-    takeaway: 'AI is already helping you every day—start noticing the tools you already use.'
+    content: `Artificial intelligence, or AI, refers to digital systems that can help with tasks that normally require human thinking.
+
+AI can help with things like:
+- writing
+- summarizing
+- organizing ideas
+- answering questions
+- generating content
+- supporting decision-making
+
+AI is not magic, and it is not always correct.
+It works best when people use it carefully and review the output.`,
+    takeaway: 'AI is best understood as a support tool, not a replacement for human judgment.'
   },
   {
     id: 'lesson2',
     title: 'Lesson 2 – Where AI helps',
     description: 'Find practical moments to introduce AI.',
     type: 'lesson',
-    content:
-      'AI shows up when you automate emails, summarize reports, or create visuals quickly. Spot the steps in your work that feel repetitive.',
-    takeaway: 'Look for repetitive or manual tasks—those are the best places to test AI helpers.'
+    content: `AI is most useful when it helps you save time, improve clarity, or get started faster.
+
+It can support:
+- students and young professionals
+- small businesses
+- teachers and trainers
+- people who want to work more efficiently
+
+Examples of practical use:
+- summarizing a long text
+- improving an email
+- brainstorming ideas
+- organizing notes
+- drafting simple content`,
+    takeaway: 'AI creates the most value when it helps with real tasks, not when it is used without purpose.'
   },
   {
     id: 'lesson3',
     title: 'Lesson 3 – Safe and smart use',
     description: 'Learn how to partner with AI safely.',
     type: 'lesson',
-    content:
-      'Be clear about what you share and always double-check the output. Treat AI suggestions as helpers, not final answers.',
-    takeaway: 'Protect sensitive information, and always review AI ideas before acting.'
+    content: `Using AI well also means using it responsibly.
+
+A few simple rules:
+- do not share sensitive or confidential information
+- always review the output before using it
+- give clear instructions
+- use AI as support, not as autopilot
+
+AI can be fast and helpful, but it still needs your judgment.`,
+    takeaway: 'Good AI use is not just about speed. It is about using the tool carefully and wisely.'
   },
   {
     id: 'lesson4',
     title: 'Lesson 4 – First practical uses',
     description: 'Try new prompts and toolkits.',
     type: 'lesson',
-    content:
-      'Start with short prompts for scheduling, note-taking, or idea shaping. Keep each exercise under 10 minutes to stay focused.',
-    takeaway: 'Small, focused prompts can unlock quick wins before diving deeper.'
+    content: `You do not need advanced knowledge to start using AI in useful ways.
+
+Simple first uses include:
+- summarizing information
+- rewriting text more clearly
+- brainstorming ideas
+- turning rough notes into structure
+
+These are strong starting points because they are:
+- simple
+- practical
+- low risk
+- easy to repeat`,
+    takeaway: 'Your first experience with AI should be simple, useful, and easy to apply again.'
   },
   {
     id: 'quiz',
@@ -286,21 +331,26 @@ const evaluateScanLevel = (score) => {
   if (score <= 24) {
     return {
       label: 'Beginner',
-      description: 'Focus on basic ideas and confidence-building activities.',
-      direction: 'Start with short introductions, awareness labs, and practical checklists.'
+      description: 'You are at the beginning of your AI journey.',
+      direction:
+        'Start with the foundations, focus on simple examples, and build comfort one step at a time.'
     };
   }
   if (score <= 40) {
     return {
       label: 'Explorer',
-      description: 'You are discovering what tools can do—keep experimenting.',
-      direction: 'Pair assessments with guided lessons and try small tool experiments.'
+      description:
+        'You already have some awareness of AI and may have tried a few tools. You are ready to move from curiosity into more practical and consistent use.',
+      direction:
+        'Continue through the lessons and start identifying a few real situations where AI can help you.'
     };
   }
   return {
     label: 'Ready to Apply',
-    description: 'You have a practical mindset and are ready to build real applications.',
-    direction: 'Move into guided projects, connect with mentors, and pilot real use cases.'
+    description:
+      'You already show strong readiness to use AI in practical ways. You are comfortable enough to move beyond basic understanding and start applying AI more intentionally.',
+    direction:
+      'Use this module as your foundation, then begin applying AI in your work, study, or everyday routines.'
   };
 };
 
@@ -474,7 +524,8 @@ const renderStepContent = (step) => {
     case 'quiz':
       return `
         <article class="quiz-card module-step-card">
-          <p class="module-step-intro">Answer the quiz to confirm what you learned.</p>
+          <h3>Module 1 Quiz</h3>
+          <p class="module-step-intro">Answer these short questions to check your understanding of the basics covered in this module.</p>
           <div class="quiz-grid">
             ${moduleQuizQuestions
               .map(
@@ -514,14 +565,20 @@ const renderStepContent = (step) => {
       const readinessLabel = moduleFlowState.scanLevel?.label || 'Not assessed yet';
       return `
         <article class="completion-card module-step-card">
-          <h3>You completed Module 1: AI Readiness & Foundations.</h3>
-          <p>You now have a clearer starting point for using AI practically.</p>
-          <p><strong>Current readiness level:</strong> ${readinessLabel}</p>
-          <p><strong>Quiz result:</strong> ${score}/6 (${passed ? 'Passed' : 'Try again'})</p>
+          <h3>Module Completed</h3>
+          <p>You completed Module 1: AI Readiness & Foundations.</p>
+          <p>You now have:</p>
+          <ul>
+            <li>a clearer understanding of what AI is</li>
+            <li>a better sense of where AI can help</li>
+            <li>a safer approach to using AI tools</li>
+            <li>a clearer view of your current readiness level</li>
+          </ul>
+          <p>This is your starting point for using AI more confidently and more practically.</p>
           <div class="certificate-card">
-            <p>Certificate available in the pilot version.</p>
+            <p>Certificate available in the pilot version</p>
           </div>
-          <p>More modules will be unlocked in future phases.</p>
+          <p>More modules and learning paths will be added in future phases.</p>
           <button class="primary-btn" id="completionDashboard" type="button">Return to Dashboard</button>
         </article>
       `;
@@ -585,9 +642,7 @@ const handleModuleNext = () => {
       moduleFlowState.quizScore = score;
       moduleFlowState.quizPassed = score >= 4;
       if (quizFeedback) {
-        const message = moduleFlowState.quizPassed
-          ? 'Great job! You passed the quiz.'
-          : 'You can review the lessons and try again.';
+        const message = moduleFlowState.quizPassed ? QUIZ_PASS_MESSAGE : QUIZ_FAIL_MESSAGE;
         quizFeedback.textContent = `You scored ${score}/6. ${message}`;
         quizFeedback.classList.add('success');
       }
