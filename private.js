@@ -671,6 +671,9 @@ const handleRoute = (route) => {
     case 'module1':
       renderModuleOne();
       break;
+    case 'admin':
+      renderAdminOverview();
+      break;
     default:
       appContent.innerHTML = '<p>Choose a section from the navigation.</p>';
   }
