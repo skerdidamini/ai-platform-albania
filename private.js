@@ -10,6 +10,44 @@ const appContent = document.getElementById('appContent');
 const routeButtons = document.querySelectorAll('[data-route]');
 const toggleButtons = document.querySelectorAll('[data-toggle]');
 const adminButton = document.querySelector('.admin-btn');
+
+const ACCOUNTS_KEY = 'ai-platform-albania-accounts';
+
+const normalizeEmail = (email = '') => email.trim().toLowerCase();
+
+const getStoredAccounts = () => {
+  try {
+    const raw = localStorage.getItem(ACCOUNTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredAccounts = (accounts) => {
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+};
+
+const findAccountByEmail = (email) => {
+  const normalized = normalizeEmail(email);
+  return getStoredAccounts().find((account) => account.email === normalized);
+};
+
+const createAccountRecord = ({ name, email, role, password, isAdmin = false }) => ({
+  name,
+  email: normalizeEmail(email),
+  role: role || 'Pilot learner',
+  password,
+  isAdmin: Boolean(isAdmin)
+});
+
+const mapAccountToUser = (account) => ({
+  name: account.name,
+  email: account.email,
+  role: account.role || 'Pilot learner',
+  isAdmin: Boolean(account.isAdmin)
+});
+
 const updateAdminButton = () => {
   if (adminButton) adminButton.hidden = !currentUser?.isAdmin;
 };
@@ -263,31 +301,35 @@ const evaluateScanLevel = (score) => {
 
 const renderDashboard = () => {
   const userName = currentUser?.name || 'Pilot learner';
+  const statusLabel = getModuleStatusLabel(moduleFlowState);
+  const ctaText =
+    statusLabel === 'Not started' ? 'Start Module 1' : statusLabel === 'In progress' ? 'Continue Module 1' : 'Review Module 1';
+  const nextStepText =
+    statusLabel === 'Not started'
+      ? 'Begin the AI Readiness Scan'
+      : statusLabel === 'In progress'
+      ? 'Continue your lessons and complete the quiz'
+      : 'Review your result and wait for the next module';
   const readinessLabel = moduleFlowState.scanLevel?.label || 'Not assessed yet';
-  const moduleStatus =
-    moduleFlowState.completed
-      ? 'Completed'
-      : moduleFlowState.stepIndex > 0 || moduleFlowState.scanScore !== null
-      ? 'In progress'
-      : 'Not started';
+  const readinessScoreText =
+    moduleFlowState.scanScore !== null ? `${moduleFlowState.scanScore}/60` : 'Ready for your first scan';
+  const readinessTip =
+    moduleFlowState.scanLevel?.description || 'Complete the readiness scan to get a recommended direction.';
   const quizSummary =
     moduleFlowState.quizScore !== null
       ? `${moduleFlowState.quizScore}/6 (${moduleFlowState.quizPassed ? 'Passed' : 'Pending review'})`
       : 'Not taken yet';
 
-  const readinessScoreText =
-    moduleFlowState.scanScore !== null ? `${moduleFlowState.scanScore}/60` : 'Ready for your first scan';
-  const readinessTip =
-    moduleFlowState.scanLevel?.description || 'Complete the readiness scan to get a recommended direction.';
-
   appContent.innerHTML = `
     <h2>Welcome, ${userName.split(' ')[0] || userName}</h2>
-    <p class="module-description">Current readiness level: <strong>${readinessLabel}</strong></p>
+    <p class="module-description">
+      This is your pilot learning space. Start with Module 1 and complete your AI readiness journey.
+    </p>
     <div class="card-grid">
       <article class="info-card">
         <h3>Module 1 status</h3>
-        <p>${moduleStatus}</p>
-        <button id="dashboardContinue" class="primary-btn" type="button">Continue Module 1</button>
+        <p>${statusLabel}</p>
+        <button id="dashboardCTA" class="primary-btn" type="button">${ctaText}</button>
       </article>
       <article class="info-card">
         <h3>Quiz score</h3>
@@ -295,15 +337,20 @@ const renderDashboard = () => {
       </article>
       <article class="info-card">
         <h3>Readiness snapshot</h3>
+        <p>${readinessLabel}</p>
         <p>${readinessScoreText}</p>
         <p>${readinessTip}</p>
+      </article>
+      <article class="info-card">
+        <h3>Next step</h3>
+        <p>${nextStepText}</p>
       </article>
     </div>
   `;
 
-  const continueButton = document.getElementById('dashboardContinue');
-  if (continueButton) {
-    continueButton.addEventListener('click', () => handleRoute('module1'));
+  const ctaButton = document.getElementById('dashboardCTA');
+  if (ctaButton) {
+    ctaButton.addEventListener('click', () => handleRoute('module1'));
   }
 };
 
@@ -592,9 +639,10 @@ const renderAdminOverview = () => {
           stepIndex: stored.module?.stepIndex,
           scanScore: stored.module?.scanScore
         }),
-        quiz: typeof stored.module?.quizScore !== 'undefined'
-          ? `${stored.module.quizScore}/6`
-          : 'Not taken'
+        quiz:
+          typeof stored.module?.quizScore !== 'undefined'
+            ? `${stored.module.quizScore}/6`
+            : 'Not taken'
       }
     : null;
 
@@ -725,16 +773,21 @@ loginForm.addEventListener('submit', (event) => {
     return;
   }
 
-  setStatus(loginStatus, 'Access granted. Opening dashboard...', 'success');
+  const account = findAccountByEmail(email);
+  if (!account) {
+    setStatus(loginStatus, 'No account found for this email. Please register first.', 'error');
+    return;
+  }
+
+  if (account.password !== password) {
+    setStatus(loginStatus, 'Incorrect password. Please try again.', 'error');
+    return;
+  }
+
+  setStatus(loginStatus, 'Welcome back. Loading your pilot workspace...', 'success');
 
   setTimeout(() => {
-    authenticate(
-      createUserRecord({
-        name: normalizeEmail(email),
-        email,
-        role: 'Pilot participant'
-      })
-    );
+    authenticate(mapAccountToUser(account));
   }, 600);
 });
 
@@ -742,7 +795,7 @@ registerForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const name = registerForm.name.value.trim();
   const email = registerForm.email.value.trim();
-  const role = registerForm.role.value.trim();
+  const role = registerForm.role.value.trim() || 'Pilot learner';
   const password = registerForm.password.value.trim();
 
   if (!name || !email || !password) {
@@ -750,17 +803,27 @@ registerForm.addEventListener('submit', (event) => {
     return;
   }
 
-  setStatus(registerStatus, 'Account created. Redirecting to the dashboard...', 'success');
+  if (findAccountByEmail(email)) {
+    setStatus(registerStatus, 'An account with that email already exists.', 'error');
+    return;
+  }
+
+  const account = createAccountRecord({
+    name,
+    email,
+    role,
+    password,
+    isAdmin: false
+  });
+  const accounts = getStoredAccounts();
+  saveStoredAccounts([...accounts, account]);
+
+  setStatus(registerStatus, 'Account created. Welcome to the pilot workspace.', 'success');
+  registerForm.reset();
 
   setTimeout(() => {
-    authenticate(
-      createUserRecord({
-        name,
-        email,
-        role: role || 'Pilot participant'
-      })
-    );
-  }, 800);
+    authenticate(mapAccountToUser(account));
+  }, 600);
 });
 
 routeButtons.forEach((button) => {
