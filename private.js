@@ -249,16 +249,7 @@ These are strong starting points because they are:
   }
 ];
 
-const moduleFlowState = {
-  stepIndex: 0,
-  scanResponses: Array(scanQuestions.length).fill(3),
-  scanScore: null,
-  scanLevel: null,
-  quizAnswers: {},
-  quizScore: null,
-  quizPassed: false,
-  completed: false
-};
+const moduleFlowState = createEmptyModuleState();
 
 const lessonOneIndex = moduleSteps.findIndex((step) => step.id === 'lesson1');
 const quizStepIndex = moduleSteps.findIndex((step) => step.id === 'quiz');
@@ -270,58 +261,89 @@ const goToLessonOne = () => {
   renderModuleFlow();
 };
 
-const STORAGE_KEY = 'ai-platform-albania-private';
+const PROGRESS_KEY = 'ai-platform-albania-progress';
+const SESSION_KEY = 'ai-platform-albania-session';
 
-const loadStoredState = () => {
+const createEmptyModuleState = () => ({
+  stepIndex: 0,
+  scanResponses: Array(scanQuestions.length).fill(3),
+  scanScore: null,
+  scanLevel: null,
+  quizAnswers: {},
+  quizScore: null,
+  quizPassed: false,
+  completed: false
+});
+
+const getStoredProgressMap = () => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const saveStoredProgressMap = (map) => {
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(map));
+};
+
+const getStoredSession = () => {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 };
 
-const persistState = () => {
-  if (!currentUser) {
-    localStorage.removeItem(STORAGE_KEY);
-    return;
-  }
-  const payload = {
-    user: currentUser,
-    module: {
-      stepIndex: moduleFlowState.stepIndex,
-      scanResponses: moduleFlowState.scanResponses,
-      scanScore: moduleFlowState.scanScore,
-      scanLevel: moduleFlowState.scanLevel,
-      quizAnswers: moduleFlowState.quizAnswers,
-      quizScore: moduleFlowState.quizScore,
-      quizPassed: moduleFlowState.quizPassed,
-      completed: moduleFlowState.completed
-    }
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+const saveStoredSession = (email) => {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ email: normalizeEmail(email) }));
 };
 
-const applyStoredModuleState = (saved = {}) => {
-  if (typeof saved.stepIndex !== 'undefined') {
-    const storedStep = Number(saved.stepIndex);
-    if (!Number.isNaN(storedStep)) {
-      moduleFlowState.stepIndex = storedStep;
-    }
-  }
-  moduleFlowState.scanResponses = Array.isArray(saved.scanResponses)
-    ? saved.scanResponses.map((value) => Number(value ?? 3))
-    : moduleFlowState.scanResponses;
-  moduleFlowState.scanScore =
-    typeof saved.scanScore !== 'undefined' ? Number(saved.scanScore) : moduleFlowState.scanScore;
-  moduleFlowState.scanLevel = saved.scanLevel ?? moduleFlowState.scanLevel;
-  moduleFlowState.quizAnswers = saved.quizAnswers ?? moduleFlowState.quizAnswers;
-  moduleFlowState.quizScore =
-    typeof saved.quizScore !== 'undefined' ? Number(saved.quizScore) : moduleFlowState.quizScore;
-  moduleFlowState.quizPassed =
-    typeof saved.quizPassed !== 'undefined' ? Boolean(saved.quizPassed) : moduleFlowState.quizPassed;
-  moduleFlowState.completed =
-    typeof saved.completed !== 'undefined' ? Boolean(saved.completed) : moduleFlowState.completed;
+const clearStoredSession = () => {
+  localStorage.removeItem(SESSION_KEY);
+};
+
+const getUserProgress = (email) => {
+  const map = getStoredProgressMap();
+  return map[normalizeEmail(email)];
+};
+
+const saveUserProgress = (email, state) => {
+  if (!email) return;
+  const map = getStoredProgressMap();
+  map[normalizeEmail(email)] = {
+    stepIndex: state.stepIndex,
+    scanResponses: Array.isArray(state.scanResponses) ? [...state.scanResponses] : createEmptyModuleState().scanResponses,
+    scanScore: state.scanScore,
+    scanLevel: state.scanLevel,
+    quizAnswers: state.quizAnswers ? { ...state.quizAnswers } : {},
+    quizScore: state.quizScore,
+    quizPassed: state.quizPassed,
+    completed: state.completed
+  };
+  saveStoredProgressMap(map);
+};
+
+const applyModuleStateSnapshot = (snapshot) => {
+  const base = createEmptyModuleState();
+  const state = { ...base, ...(snapshot || {}) };
+  moduleFlowState.stepIndex = state.stepIndex;
+  moduleFlowState.scanResponses = Array.isArray(state.scanResponses)
+    ? [...state.scanResponses]
+    : [...base.scanResponses];
+  moduleFlowState.scanScore = state.scanScore;
+  moduleFlowState.scanLevel = state.scanLevel;
+  moduleFlowState.quizAnswers = state.quizAnswers ? { ...state.quizAnswers } : {};
+  moduleFlowState.quizScore = state.quizScore;
+  moduleFlowState.quizPassed = state.quizPassed;
+  moduleFlowState.completed = state.completed;
+};
+
+const persistState = () => {
+  if (!currentUser) return;
+  saveUserProgress(currentUser.email, moduleFlowState);
 };
 
 const setStatus = (element, message = '', type = '') => {
@@ -776,23 +798,17 @@ const renderModuleOne = () => {
 };
 
 const renderAdminOverview = () => {
-  const stored = loadStoredState();
-  const savedUser = stored?.user
-    ? {
-        name: stored.user.name || 'Pilot learner',
-        email: stored.user.email,
-        readiness: stored.module?.scanLevel?.label || 'Not assessed yet',
-        status: getModuleStatusLabel({
-          completed: stored.module?.completed,
-          stepIndex: stored.module?.stepIndex,
-          scanScore: stored.module?.scanScore
-        }),
-        quiz:
-          typeof stored.module?.quizScore !== 'undefined'
-            ? `${stored.module.quizScore}/6`
-            : 'Not taken'
-      }
-    : null;
+  const progressMap = getStoredProgressMap();
+  const fromProgress = Object.entries(progressMap).map(([email, progress]) => ({
+    name: currentUser && normalizeEmail(currentUser.email) === email ? currentUser.name || 'Pilot learner' : email,
+    email,
+    readiness: progress.scanLevel?.label || 'Not assessed yet',
+    status: getModuleStatusLabel(progress),
+    quiz:
+      typeof progress.quizScore !== 'undefined'
+        ? `${progress.quizScore}/6`
+        : 'Not taken'
+  }));
 
   const demoUsers = [
     {
@@ -811,7 +827,7 @@ const renderAdminOverview = () => {
     }
   ];
 
-  const overviewUsers = [savedUser, ...demoUsers].filter(Boolean);
+  const overviewUsers = [...fromProgress, ...demoUsers];
 
   appContent.innerHTML = `
     <h2>Admin overview</h2>
@@ -886,6 +902,8 @@ const handleLogout = () => {
   setStatus(registerStatus, '', '');
   appContent.innerHTML = '';
   persistState();
+  applyModuleStateSnapshot(null);
+  clearStoredSession();
   updateAdminButton();
 };
 
@@ -896,7 +914,10 @@ const authenticate = (user) => {
   registerCard.hidden = true;
   setActiveNav('dashboard');
   appStatus.textContent = `${user.name || 'Pilot learner'} · Pilot access`;
-  if (adminButton) adminButton.hidden = !user.isAdmin;
+  updateAdminButton();
+  saveStoredSession(user.email);
+  const savedProgress = getUserProgress(user.email);
+  applyModuleStateSnapshot(savedProgress);
   persistState();
   handleRoute('dashboard');
 };
@@ -984,19 +1005,14 @@ routeButtons.forEach((button) => {
 });
 
 const restoreSession = () => {
-  const stored = loadStoredState();
-  if (!stored) return;
-  applyStoredModuleState(stored.module ?? {});
-  if (stored.user) {
-    currentUser = stored.user;
-    authShell.hidden = true;
-    appShell.hidden = false;
-    registerCard.hidden = true;
-    setActiveNav('dashboard');
-    appStatus.textContent = `${currentUser.name || 'Pilot learner'} · Pilot access`;
-    handleRoute('dashboard');
-    updateAdminButton();
+  const session = getStoredSession();
+  if (!session?.email) return;
+  const account = findAccountByEmail(session.email);
+  if (!account) {
+    clearStoredSession();
+    return;
   }
+  authenticate(mapAccountToUser(account));
 };
 
 restoreSession();
