@@ -249,6 +249,17 @@ These are strong starting points because they are:
   }
 ];
 
+const createEmptyModuleState = () => ({
+  stepIndex: 0,
+  scanResponses: Array(scanQuestions.length).fill(3),
+  scanScore: null,
+  scanLevel: null,
+  quizAnswers: {},
+  quizScore: null,
+  quizPassed: false,
+  completed: false
+});
+
 const moduleFlowState = createEmptyModuleState();
 
 const lessonOneIndex = moduleSteps.findIndex((step) => step.id === 'lesson1');
@@ -263,17 +274,6 @@ const goToLessonOne = () => {
 
 const PROGRESS_KEY = 'ai-platform-albania-progress';
 const SESSION_KEY = 'ai-platform-albania-session';
-
-const createEmptyModuleState = () => ({
-  stepIndex: 0,
-  scanResponses: Array(scanQuestions.length).fill(3),
-  scanScore: null,
-  scanLevel: null,
-  quizAnswers: {},
-  quizScore: null,
-  quizPassed: false,
-  completed: false
-});
 
 const getStoredProgressMap = () => {
   try {
