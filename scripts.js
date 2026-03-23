@@ -249,7 +249,7 @@ if (contactForm) {
       contactForm,
       contactSuccess,
       'Thank you. Your message has been sent successfully.',
-      'Please check the highlighted fields and try again.'
+      'Something went wrong. Please try again.'
     );
 
     if (!isValid) {
@@ -271,8 +271,8 @@ if (applyForm) {
     const isValid = handleFormSubmit(
       applyForm,
       applySuccess,
-      'Thank you for joining the waitlist. We’ll keep you updated.',
-      'Please complete all required fields before submitting.'
+      "Thank you for joining the waitlist. We'll keep you updated.",
+      "We couldn't process your request. Please try again."
     );
 
     if (!isValid) {
@@ -307,4 +307,10 @@ navLinks.forEach((link) => {
     }
     closeMenu();
   });
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeMenu();
+  }
 });

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Private MVP | AI Platform Albania</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="private.css" />
+  </head>
+  <body>
+    <div class="private-app">
+      <section class="auth-shell" id="authShell">
+        <div class="auth-card auth-card--primary">
+          <p class="eyebrow">Private pilot workspace</p>
+          <h1>AI Platform Albania</h1>
+          <p class="lead">
+            Sign in to explore readiness diagnostics, learning paths, and pilot tools for the MVP.
+          </p>
+          <form id="loginForm" class="auth-form">
+            <label>
+              Email address
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" autocomplete="current-password" minlength="6" required />
+            </label>
+            <button type="submit" class="primary-btn">Sign in</button>
+            <p id="loginStatus" class="form-status" aria-live="polite"></p>
+          </form>
+          <p class="auth-switch">
+            New to the pilot? <button type="button" class="text-link" data-toggle="register">Create an account</button>
+          </p>
+        </div>
+        <div class="auth-card auth-card--secondary" id="registerCard" hidden>
+          <h2>Create your account</h2>
+          <form id="registerForm" class="auth-form">
+            <label>
+              Full name
+              <input type="text" name="name" required />
+            </label>
+            <label>
+              Email address
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label>
+              Role or organization
+              <input type="text" name="role" />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" minlength="6" required />
+            </label>
+            <button type="submit" class="primary-btn">Create account</button>
+            <p id="registerStatus" class="form-status" aria-live="polite"></p>
+          </form>
+          <p class="auth-switch">
+            Already have an account? <button type="button" class="text-link" data-toggle="login">Sign in</button>
+          </p>
+        </div>
+      </section>
+
+      <section class="app-shell" id="appShell" hidden>
+        <header class="app-header">
+          <div>
+            <p class="eyebrow">Pilot workspace</p>
+            <h1 class="app-title">AI Platform Albania</h1>
+          </div>
+          <span id="appStatus" class="pill">Private MVP · Pilot access</span>
+        </header>
+        <div class="app-body">
+          <nav class="app-nav" aria-label="Primary navigation">
+            <button type="button" data-route="dashboard" class="active">Dashboard</button>
+            <button type="button" data-route="profile">My Profile</button>
+            <button type="button" data-route="module1">Module 1</button>
+            <button type="button" data-route="logout" class="ghost-btn">Logout</button>
+          </nav>
+          <main class="app-content" id="appContent">
+            <!-- Dynamic content renders here -->
+          </main>
+        </div>
+      </section>
+    </div>
+    <script src="private.js" defer></script>
+  </body>
+</html>
